@@ -1,4 +1,8 @@
-function Nav() {
+import { useEffect, useRef } from "react";
+
+function Nav({ onChangeTheme, theme, iconRef }) {
+  const icon = theme === "dark" ? "fa-sun" : "fa-moon";
+
   return (
     <div className="container">
       <nav className="navbar">
@@ -11,8 +15,8 @@ function Nav() {
               placeholder="Rechercher"
               aria-label="Search"
             />
-            <button className="btn">
-              <i className="fa fa-moon theme-icon"></i>
+            <button className="btn" onClick={onChangeTheme}>
+              <i ref={iconRef} className={`fa ${icon} theme-icon rotate`}></i>
             </button>
           </form>
         </div>

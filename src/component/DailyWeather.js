@@ -1,6 +1,12 @@
 import DailyCard from "./DailyCard";
-
-function DailyWeather() {
+import React from "react";
+function DailyWeather({ weather, getWeatherIcon }) {
+  const {
+    temperature_2m_max: max,
+    temperature_2m_min: min,
+    time: dates,
+    weathercode: codes,
+  } = weather;
   return (
     <div className="container mt-5 px-5">
       <div className="row">
@@ -9,12 +15,19 @@ function DailyWeather() {
         </div>
       </div>
       <div className="row">
-        {Array.from({ length: 7 }).map((_, i) => {
+        {dates?.map((date, i) => {
           return (
-            <>
-              <DailyCard key={i + 10} />
+            <React.Fragment key={date}>
+              <DailyCard
+                date={date}
+                max={max.at(i)}
+                min={min.at(i)}
+                code={codes.at(i)}
+                isToday={i === 0}
+                getWeatherIcon={getWeatherIcon}
+              />
               {i === 0 && <div className="col-12 d-lg-none"></div>}
-            </>
+            </React.Fragment>
           );
         })}
       </div>
