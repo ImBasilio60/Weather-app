@@ -46,8 +46,6 @@ function App() {
           `https://geocoding-api.open-meteo.com/v1/search?name=${location}`,
         );
         const geoData = await geoRes.json();
-        console.log(geoData);
-
         if (!geoData.results) throw new Error("Location not found");
 
         const { latitude, longitude, timezone, name } = geoData.results.at(0);
@@ -68,7 +66,7 @@ function App() {
       }
     }
     fetchWeather();
-  }, []);
+  }, [location]);
 
   function handleChangeTheme(e) {
     e.preventDefault();
@@ -76,7 +74,13 @@ function App() {
   }
   return (
     <>
-      <Nav onChangeTheme={handleChangeTheme} theme={theme} iconRef={iconRef} />
+      <Nav
+        onChangeTheme={handleChangeTheme}
+        theme={theme}
+        iconRef={iconRef}
+        setLocation={setLocation}
+        location={location}
+      />
       <Info
         location={displayLocation}
         weather={weather}

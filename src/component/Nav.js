@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 
-function Nav({ onChangeTheme, theme, iconRef }) {
+function Nav({ onChangeTheme, theme, iconRef, location, setLocation }) {
   const icon = theme === "dark" ? "fa-sun" : "fa-moon";
 
   return (
@@ -14,6 +14,8 @@ function Nav({ onChangeTheme, theme, iconRef }) {
               type="search"
               placeholder="Rechercher"
               aria-label="Search"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
             />
             <button className="btn" onClick={onChangeTheme}>
               <i ref={iconRef} className={`fa ${icon} theme-icon rotate`}></i>
