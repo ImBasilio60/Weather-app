@@ -16,9 +16,10 @@ function Info({ location, weather, getWeatherIcon }) {
   const {
     temperature_2m_max: max,
     temperature_2m_min: min,
-    time: dates,
     weathercode: codes,
   } = weather;
+
+  const displayDeg = Math.floor((max?.at(0) + min?.at(0)) / 2);
 
   return (
     <div className="container text-center mt-5">
@@ -27,7 +28,7 @@ function Info({ location, weather, getWeatherIcon }) {
           <img src={`/img/${getWeatherIcon(codes?.at(0))}`} alt="" />
           <div>
             <h1 className="fw-bold align-self-end">
-              {Math.floor((max?.at(0) + min?.at(0)) / 2)}&deg;
+              {isNaN(displayDeg) ? 0 : displayDeg}&deg;
               <span className="fs-6 fw-light">C</span>
             </h1>
             <time>{`${hours < 10 ? "0" + hours : hours} : ${minutes < 10 ? "0" + minutes : minutes} : ${seconds < 10 ? "0" + seconds : seconds}`}</time>
