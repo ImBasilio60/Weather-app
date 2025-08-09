@@ -4,6 +4,7 @@ import DailyWeather from "./DailyWeather";
 import Cloud from "./Cloud";
 import { useEffect, useRef, useState } from "react";
 import Spinner from "./Spinner";
+
 function getWeatherIcon(wmoCode) {
   const icons = new Map([
     [[0], "003-sun.png"],
@@ -23,7 +24,7 @@ function getWeatherIcon(wmoCode) {
 }
 function App() {
   const [theme, setTheme] = useState("light");
-  const [location, setLocation] = useState("Antsirabe");
+  const [location, setLocation] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [displayLocation, setDisplayLocation] = useState("");
   const [weather, setWeather] = useState({});
@@ -40,20 +41,23 @@ function App() {
     const controller = new AbortController();
     async function fetchWeather() {
       if (location.length < 2) return setWeather({});
-
       try {
         setIsLoading(true);
         const geoRes = await fetch(
-          `https://geocoding-api.open-meteo.com/v1/search?name=${location}`,
+          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(location)}`,
           { signal: controller.signal },
         );
         const geoData = await geoRes.json();
-        if (!geoData.results) throw new Error("Location not found");
-        const { latitude, longitude, timezone, name } = geoData.results.at(0);
+
+        if (!geoData.length) throw new Error("Location not found");
+        console.log(geoData);
+        const { lat, lon, name } = geoData[0];
+        const latitude = parseFloat(lat);
+        const longitude = parseFloat(lon);
         setDisplayLocation(name);
         // 2) Getting actual weather
         const weatherRes = await fetch(
-          `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&timezone=${timezone}&daily=weathercode,temperature_2m_max,temperature_2m_min`,
+          `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&timezone=auto&daily=weathercode,temperature_2m_max,temperature_2m_min`,
         );
         const weatherData = await weatherRes.json();
         setWeather(weatherData.daily);
@@ -69,6 +73,46 @@ function App() {
     return () => {
       controller.abort();
     };
+  }, [location]);
+
+  useEffect(() => {
+    async function fetchInitialData() {
+      try {
+        if (!navigator.geolocation) {
+          throw new Error("Your browser does not support geolocation");
+        }
+        setIsLoading(true);
+        navigator.geolocation.getCurrentPosition(
+          async (pos) => {
+            const lat = pos.coords.latitude;
+            const lng = pos.coords.longitude;
+
+            const geoRes = await fetch(
+              `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}&localityLanguage=fr`,
+            );
+
+            const geoData = await geoRes.json();
+            const cityName = geoData?.city || "Unknown location";
+            setDisplayLocation(cityName);
+
+            const weatherRes = await fetch(
+              `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&timezone=auto&daily=weathercode,temperature_2m_max,temperature_2m_min`,
+            );
+            const weatherData = await weatherRes.json();
+            setWeather(weatherData.daily);
+            setIsLoading(false);
+          },
+          (err) => {
+            console.error("Geolocation error:", err.message);
+            setIsLoading(false);
+          },
+        );
+      } catch (err) {
+        console.error("Error:", err.message);
+        setIsLoading(false);
+      }
+    }
+    if (location === "") fetchInitialData();
   }, [location]);
 
   function handleChangeTheme(e) {
