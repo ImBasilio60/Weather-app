@@ -4,6 +4,7 @@ import DailyWeather from "./DailyWeather";
 import Cloud from "./Cloud";
 import { useEffect, useRef, useState } from "react";
 import Spinner from "./Spinner";
+import Message from "./Message";
 
 function getWeatherIcon(wmoCode) {
   const icons = new Map([
@@ -28,6 +29,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [displayLocation, setDisplayLocation] = useState("");
   const [weather, setWeather] = useState({});
+  const [error, setError] = useState(null);
   const iconRef = useRef(null);
 
   useEffect(() => {
@@ -37,6 +39,7 @@ function App() {
       iconRef.current.classList.remove("rotate");
     }, 400);
   }, [theme, iconRef]);
+
   useEffect(() => {
     const controller = new AbortController();
     async function fetchWeather() {
@@ -61,12 +64,11 @@ function App() {
         );
         const weatherData = await weatherRes.json();
         setWeather(weatherData.daily);
+        setIsLoading(false);
       } catch (err) {
         if (err.name !== "AbortError") {
-          console.error(err);
+          setError(err);
         }
-      } finally {
-        setIsLoading(false);
       }
     }
     fetchWeather();
@@ -74,7 +76,6 @@ function App() {
       controller.abort();
     };
   }, [location]);
-
   useEffect(() => {
     async function fetchInitialData() {
       try {
@@ -103,16 +104,16 @@ function App() {
             setIsLoading(false);
           },
           (err) => {
-            console.error("Geolocation error:", err.message);
+            setError("Geolocation error:", err.message);
             setIsLoading(false);
           },
         );
       } catch (err) {
-        console.error("Error:", err.message);
+        setError("Error:", err.message);
         setIsLoading(false);
       }
     }
-    if (location === "") fetchInitialData();
+    if (location === "" || location.length < 2) fetchInitialData();
   }, [location]);
 
   function handleChangeTheme(e) {
@@ -129,7 +130,9 @@ function App() {
         location={location}
       />
 
-      {isLoading ? (
+      {error !== null ? (
+        <Message error={error} />
+      ) : isLoading ? (
         <Spinner />
       ) : (
         <>
