@@ -1,9 +1,13 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { WeatherContext } from "../context/WeatherContext";
 
-function Info({ location, weather, getWeatherIcon }) {
+function Info() {
   const [hours, setHours] = useState(0);
   const [minutes, setMinutes] = useState(0);
   const [seconds, setSeconds] = useState(0);
+
+  const { state, getWeatherIcon } = useContext(WeatherContext);
+  const { displayLocation: location, weather } = state;
   useEffect(() => {
     setInterval(function () {
       const date = new Date();
@@ -12,7 +16,7 @@ function Info({ location, weather, getWeatherIcon }) {
       setHours(date.getHours());
     });
   }, [setMinutes, setSeconds, setHours]);
-
+  if (!weather) return;
   const {
     temperature_2m_max: max,
     temperature_2m_min: min,

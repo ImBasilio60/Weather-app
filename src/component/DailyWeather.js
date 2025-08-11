@@ -1,6 +1,9 @@
 import DailyCard from "./DailyCard";
-import React from "react";
-function DailyWeather({ weather, getWeatherIcon }) {
+import React, { useContext } from "react";
+import { WeatherContext } from "../context/WeatherContext";
+function DailyWeather() {
+  const { state } = useContext(WeatherContext);
+  const { weather } = state;
   const {
     temperature_2m_max: max,
     temperature_2m_min: min,
@@ -24,7 +27,6 @@ function DailyWeather({ weather, getWeatherIcon }) {
                 min={min.at(i)}
                 code={codes.at(i)}
                 isToday={i === 0}
-                getWeatherIcon={getWeatherIcon}
               />
               {i === 0 && <div className="col-12 d-lg-none"></div>}
             </React.Fragment>

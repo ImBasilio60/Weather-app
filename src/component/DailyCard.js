@@ -1,12 +1,15 @@
+import { useContext } from "react";
+import { WeatherContext } from "../context/WeatherContext";
+
 function formatDay(dateStr) {
   return new Intl.DateTimeFormat("en", {
     weekday: "short",
   }).format(new Date(dateStr));
 }
 
-function DailyCard({ date, max, min, code, isToday, getWeatherIcon }) {
+function DailyCard({ date, max, min, code, isToday }) {
   let day = new Date(date);
-
+  const { getWeatherIcon } = useContext(WeatherContext);
   return (
     <div className="col-4 col-lg mb-3">
       <div className="card text-center">
