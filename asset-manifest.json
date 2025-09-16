@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/Weather-app/static/css/main.627f1678.css",
-    "main.js": "/Weather-app/static/js/main.120151aa.js",
+    "main.js": "/Weather-app/static/js/main.b2d21cfc.js",
     "static/media/Roboto-Bold.ttf": "/Weather-app/static/media/Roboto-Bold.6dafca5a4f1e31f2bdf1.ttf",
     "static/media/Roboto-Light.ttf": "/Weather-app/static/media/Roboto-Light.73fd17b88d34c2b2f437.ttf",
     "index.html": "/Weather-app/index.html",
     "main.627f1678.css.map": "/Weather-app/static/css/main.627f1678.css.map",
-    "main.120151aa.js.map": "/Weather-app/static/js/main.120151aa.js.map"
+    "main.b2d21cfc.js.map": "/Weather-app/static/js/main.b2d21cfc.js.map"
   },
   "entrypoints": [
     "static/css/main.627f1678.css",
-    "static/js/main.120151aa.js"
+    "static/js/main.b2d21cfc.js"
   ]
 }
