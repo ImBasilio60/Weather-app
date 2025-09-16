@@ -26,7 +26,7 @@ function DailyCard({ date, max, min, code, isToday }) {
           </p>
 
           <img
-            src={`/img/${getWeatherIcon(code)}`}
+            src={`https://raw.githubusercontent.com/ImBasilio60/Weather-app/refs/heads/master/public/img/${getWeatherIcon(code)}`}
             className="mb-3"
             alt={code}
           />

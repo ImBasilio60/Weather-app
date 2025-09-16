@@ -29,7 +29,10 @@ function Info() {
     <div className="container text-center mt-5">
       <div className="row">
         <div className="col-12 d-flex justify-content-center align-items-center gap-3 mb-4">
-          <img src={`/img/${getWeatherIcon(codes?.at(0))}`} alt="" />
+          <img
+            src={`https://raw.githubusercontent.com/ImBasilio60/Weather-app/refs/heads/master/public/img/${getWeatherIcon(codes?.at(0))}`}
+            alt=""
+          />
           <div>
             <h1 className="fw-bold align-self-end">
               {isNaN(displayDeg) ? 0 : displayDeg}&deg;
